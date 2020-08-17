@@ -24,15 +24,15 @@ data class NoteEntity (
     val id: Long = 0L
 ){
    companion object {
-       fun fromNote(note:Note){    // From Note to the NoteEntity prepare
-           NoteEntity(note.title,note.content,note.creationTime,note.updatedTime)
+       fun fromNote(note:Note) : NoteEntity{    // From Note to the NoteEntity prepare
+        return   NoteEntity(note.title,note.content,note.creationTime,note.updatedTime, note.id)
        }
 
    }
 
     // To Note
-    fun toNote(){
-        Note(title = title,content = content,creationTime = creationTime,updatedTime = updatedTime,id = id)
+    fun toNote() : Note{
+      return  Note(title = title,content = content,creationTime = creationTime,updatedTime = updatedTime,id = id)
     }
 
 }

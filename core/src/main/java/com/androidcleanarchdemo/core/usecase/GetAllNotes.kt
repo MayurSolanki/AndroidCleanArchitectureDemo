@@ -1,5 +1,6 @@
 package com.androidcleanarchdemo.core.usecase
 
+import com.androidcleanarchdemo.core.data.Note
 import com.androidcleanarchdemo.core.repository.NoteRepository
 
 /**
@@ -7,7 +8,7 @@ import com.androidcleanarchdemo.core.repository.NoteRepository
  */
 class GetAllNotes(private val noteRepository: NoteRepository) {
 
-    suspend  operator  fun invoke(){
-        noteRepository.getAllNotes()
+    suspend  operator  fun invoke() : List<Note>{
+      return   noteRepository.getAllNotes()
     }
 }

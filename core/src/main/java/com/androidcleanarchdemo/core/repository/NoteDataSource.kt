@@ -11,7 +11,7 @@ interface NoteDataSource {
 
     suspend fun get(id:Long):Note
 
-    suspend fun getAll():List<Note>
+    suspend fun getAll() : List<Note>
 
     suspend fun remove(note: Note)
 }

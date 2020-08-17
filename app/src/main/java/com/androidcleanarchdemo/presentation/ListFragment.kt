@@ -5,8 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.androidcleanarchdemo.R
+import com.androidcleanarchdemo.framework.ListViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -19,7 +24,10 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ListFragment : Fragment() {
+class ListFragment : Fragment() , ListAction{
+
+    private val noteListAdapter = NoteListAdapter(arrayListOf(),this)
+    private lateinit var  listViewModel: ListViewModel
 
     private var param1: String? = null
     private var param2: String? = null
@@ -43,8 +51,27 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = noteListAdapter
+        }
+
         addNote.setOnClickListener(View.OnClickListener {
             goToNoteDetail()
+        })
+
+        listViewModel = ViewModelProviders.of(this).get(ListViewModel::class.java)
+
+        observeViewModel()
+    }
+
+    private fun observeViewModel(){
+        listViewModel.notes.observe(this, Observer {
+            progressBar.visibility = View.GONE
+            recyclerView.visibility  = View.VISIBLE
+            noteListAdapter.updateNotes(it.sortedByDescending {
+                it.updatedTime
+            })
         })
     }
 
@@ -62,5 +89,14 @@ class ListFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        listViewModel.getNotes()
+    }
+
+    override fun onClick(id: Long) {
+        goToNoteDetail(id)
     }
 }
